@@ -78,6 +78,38 @@ class UserController implements CrudOps
 
     }
 
+    public function delete($id)
+    {
+        $db = new DB();
+        try {
+            $stmt = $db->connect()
+                ->prepare("DELETE FROM users WHERE  id=:id");
+            $stmt->bindParam(":id", $id);
+
+            $query = $stmt->execute();
+            if ($query) {
+                return [
+                    "status" => "success",
+                    "message" => "User Account deleted"
+                ];
+            } else {
+                return [
+                    "status" => "error",
+                    "message" => "Error Occurred Failed to delete user account"
+                ];
+            }
+
+
+        } catch (\PDOException $e) {
+            return [
+                "status" => "error",
+                "message" => "Exception Error {$e->getMessage()}"
+            ];
+
+        }
+    }
+
+
     public function getId($id)
     {
         try {
