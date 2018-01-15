@@ -24,6 +24,7 @@ class ProductController implements CrudOps {
             $stmt->bindParam(":cost", $data['cost']);
             $stmt->bindParam(":quantity", $data['quantity']);
             $query = $stmt->execute();
+
             if ($query) {
                 return [
                     "status" => "success",
@@ -32,7 +33,7 @@ class ProductController implements CrudOps {
             } else {
                 return [
                     "status" => "error",
-                    "message" => "Error Occurred Failed to add Product"
+                    "message" => "Error Occurred Failed to add Product {$stmt->errorInfo()[2]}"
                 ];
             }
 
