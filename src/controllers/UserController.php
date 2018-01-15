@@ -4,6 +4,7 @@ namespace src\controllers;
 
 require_once __DIR__.'/../interfaces/CrudOps.php';
 require_once __DIR__.'/../db/DB.php';
+require_once __DIR__.'/../controllers/Auth.php';
 
 
 
@@ -14,8 +15,9 @@ use src\db\DB;
 
 class UserController implements CrudOps
 {
+    use Auth;
 
-    public function create(array $data)
+    public function create($data)
     {
         $db = new DB();
         try {
@@ -49,7 +51,7 @@ class UserController implements CrudOps
 
     }
 
-    public function update($id, array $data)
+    public function update($id, $data)
     {
         $db = new DB();
         try {

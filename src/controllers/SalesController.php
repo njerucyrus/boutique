@@ -11,7 +11,7 @@ use src\interfaces\CrudOps;
 class SalesController implements CrudOps
 {
 
-    public function create(array $data)
+    public function create($data)
     {
         $db = new DB();
         try {
@@ -45,7 +45,7 @@ class SalesController implements CrudOps
         }
     }
 
-    public function update($id, array $data)
+    public function update($id, $data)
     {
         $db = new DB();
         try {

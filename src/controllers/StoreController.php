@@ -13,7 +13,7 @@ use src\interfaces\CrudOps;
 use src\db\DB;
 
 class StoreController implements CrudOps{
-    public function create(array $data)
+    public function create($data)
     {
         $db = new DB();
         try {
@@ -45,7 +45,7 @@ class StoreController implements CrudOps{
         }
     }
 
-    public function update($id, array $data)
+    public function update($id,$data)
     {
         $db = new DB();
         try {
