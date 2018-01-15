@@ -7,7 +7,8 @@ use src\controllers\UserController;
 use src\controllers\StoreController;
 $userCtrl = new UserController();
 $success_msg= $error_msg = '';
-if($_POST){
+
+if( isset( $_POST['username'] )&&isset( $_POST['password'] )&&isset( $_POST['user_type'] )){
     $username = $_POST['username'];
     $password = $_POST['password'];
     $userType = $_POST['user_type'];
@@ -24,17 +25,10 @@ if($_POST){
     }
 
 }
-echo "am in php";
 ?>
 <!DOCTYPE HTML>
 <html>
-<head>
-    <style>
-        .text {
-            padding: 12px 20px;
-        }
-    </style>
-</head>
+
 <body bgcolor="#f0f8ff">
 <div>
     <?php
@@ -45,9 +39,13 @@ echo "am in php";
     ?>
 
 </div>
-    <form METHOD="post" action="<?php echo htmlspecialchars($_SERVER[PHP_SELF]); ?>"  style="border: 3px solid #f1f1f1;">
+
+    <form METHOD="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"  style="width:800px; margin:0 auto;border: 3px solid #f1f1f1;">
 
         <div >
+            <div>
+                <h1>Register user</h1>
+            </div>
             <div>
             <label><b>Username</b></label>
             <input type="text" placeholder="Enter Username" name="username" required><br/>
@@ -60,7 +58,7 @@ echo "am in php";
             <div>
                 <label><b>User Type</b></label>
 
-                <select name="user_type" >
+                <select name="user_type">
                     <option value="admin">Admin</option>
                     <option value="customer">customer</option>
 

@@ -1,7 +1,14 @@
 <?php
 namespace src\controllers;
+
 require_once __DIR__.'/../interfaces/CrudOps.php';
 require_once __DIR__.'/../db/DB.php';
+
+
+require_once __DIR__.'/../interfaces/CrudOps.php';
+require_once __DIR__.'/../db/DB.php';
+
+
 use src\interfaces\CrudOps;
 use src\db\DB;
 
@@ -58,7 +65,7 @@ class StoreController implements CrudOps{
             } else {
                 return [
                     "status" => "error",
-                    "message" => "Error Occurred Failed to Store updated"
+                    "message" => "Error Occurred Failed , Store not  updated"
                 ];
             }
 
@@ -136,7 +143,7 @@ class StoreController implements CrudOps{
 
             $db = new DB();
             $stmt = $db->connect()
-                ->prepare("SELECT t.* FROM stores t WHERE  t.id=:id");
+                ->prepare("SELECT t.* FROM stores t");
             $stmt->bindParam(":id", $id);
             $query = $stmt->execute();
 
