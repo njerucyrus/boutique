@@ -60,7 +60,7 @@ class StoreController implements CrudOps{
             } else {
                 return [
                     "status" => "error",
-                    "message" => "Error Occurred Failed to Store updated"
+                    "message" => "Error Occurred Failed , Store not  updated"
                 ];
             }
 

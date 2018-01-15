@@ -82,6 +82,20 @@ class SalesController implements CrudOps{
 
     public function getId($id)
     {
+        $sql = "SELECT DISTINCT s.receipt_no, p.name as product_name, p.cost,
+       c.first_name, c.last_name, s.quantity, s.date_purchased
+      FROM sales s, products p, customers c INNER JOIN sales sl
+      ON c.id=sl.customer_id WHERE sl.id= '{$id}' ORDER BY sl.date_purchased ASC";
+        $db = new DB();
+        $stmt = $db->connect()
+            ->prepare($sql);
+        $query = $stmt->execute();
+        if ($query) {
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        } else {
+            return [];
+        }
 
     }
     public function delete($id)
@@ -118,9 +132,28 @@ class SalesController implements CrudOps{
     public function all()
     {
         $sql = "SELECT DISTINCT s.receipt_no, p.name as product_name, p.cost,
-  c.first_name, c.last_name, s.quantity, s.date_purchased
-FROM sales s, products p, customers c INNER JOIN sales sl
-ON c.id=sl.customer_id ORDER BY sl.date_purchased ASC";
+       c.first_name, c.last_name, s.quantity, s.date_purchased
+      FROM sales s, products p, customers c INNER JOIN sales sl
+      ON c.id=sl.customer_id ORDER BY sl.date_purchased ASC";
+        try {
+            $db = new DB();
+            $stmt = $db->connect()
+                ->prepare($sql);
+            $query = $stmt->execute();
+            if ($query) {
+                return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            } else {
+                return [];
+            }
+        }catch (\PDOException $e) {
+
+            return [
+                "status" => "error",
+                "message" => "Exception Error {$e->getMessage()}"
+            ];
+        }
+
     }
 
 }
