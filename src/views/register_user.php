@@ -30,21 +30,22 @@ if( isset( $_POST['username'] )&&isset( $_POST['password'] )&&isset( $_POST['use
 <html>
 
 <body bgcolor="#f0f8ff">
-<div>
-    <?php
-    if($success_msg!="")
-        echo $success_msg;
-    elseif($error_msg!="")
-    echo $success_msg;
-    ?>
-
-</div>
 
     <form METHOD="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"  style="width:800px; margin:0 auto;border: 3px solid #f1f1f1;">
 
         <div >
             <div>
                 <h1>Register user</h1>
+                <div>
+                    <?php
+                    if($success_msg!="")
+                        echo $success_msg;
+                    elseif($error_msg!="")
+                        echo $success_msg;
+                    ?>
+
+                </div>
+
             </div>
             <div>
             <label><b>Username</b></label>

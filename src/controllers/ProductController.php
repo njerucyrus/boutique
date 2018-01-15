@@ -153,7 +153,7 @@ class ProductController implements CrudOps {
                 ->prepare($sql);
             $query = $stmt->execute();
             if ($query) {
-                return $stmt->fetch(\PDO::FETCH_ASSOC);
+                return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
             } else {
                 return [];
