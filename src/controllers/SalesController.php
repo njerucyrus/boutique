@@ -64,11 +64,11 @@ class SalesController implements CrudOps
                 ];
 
             }
-        }else{
+        } else {
             return [
-                "status"=>"error",
-                "message"=>"Data validation failed. Access errors key for specific errors",
-                "errors" =>$errors
+                "status" => "error",
+                "message" => "Data validation failed. Access errors key for specific errors",
+                "errors" => $errors
             ];
         }
     }
@@ -93,7 +93,7 @@ class SalesController implements CrudOps
         if (!array_key_exists("quantity", $data)) {
             array_push($errors, "quantity key missing in data passed");
         }
-        if (!is_int($id)){
+        if (!is_int($id)) {
             array_push($errors, "id not an integer");
         }
 
@@ -132,11 +132,11 @@ class SalesController implements CrudOps
                 ];
 
             }
-        }else{
+        } else {
             return [
-                "status"=>"error",
-                "message"=>"Data validation failed. Access errors key for specific errors",
-                "errors" =>$errors
+                "status" => "error",
+                "message" => "Data validation failed. Access errors key for specific errors",
+                "errors" => $errors
             ];
         }
     }
@@ -165,7 +165,7 @@ class SalesController implements CrudOps
                     "message" => "Exception Error {$e->getMessage()}"
                 ];
             }
-        }else{
+        } else {
             return [
                 "status" => "error",
                 "message" => "Data validation failed. Access errors key for specific errors",
@@ -176,35 +176,35 @@ class SalesController implements CrudOps
 
     public function delete($id)
     {
-        if (is_int($id)){
-        $db = new DB();
-        try {
-            $stmt = $db->connect()
-                ->prepare("DELETE FROM sales WHERE  id=:id");
-            $stmt->bindParam(":id", $id);
+        if (is_int($id)) {
+            $db = new DB();
+            try {
+                $stmt = $db->connect()
+                    ->prepare("DELETE FROM sales WHERE  id=:id");
+                $stmt->bindParam(":id", $id);
 
-            $query = $stmt->execute();
-            if ($query) {
-                return [
-                    "status" => "success",
-                    "message" => "Sale Item deleted"
-                ];
-            } else {
+                $query = $stmt->execute();
+                if ($query) {
+                    return [
+                        "status" => "success",
+                        "message" => "Sale Item deleted"
+                    ];
+                } else {
+                    return [
+                        "status" => "error",
+                        "message" => "Error Occurred Failed to delete Sale Item"
+                    ];
+                }
+
+
+            } catch (\PDOException $e) {
                 return [
                     "status" => "error",
-                    "message" => "Error Occurred Failed to delete Sale Item"
+                    "message" => "Exception Error {$e->getMessage()}"
                 ];
+
             }
-
-
-        } catch (\PDOException $e) {
-            return [
-                "status" => "error",
-                "message" => "Exception Error {$e->getMessage()}"
-            ];
-
-        }
-        }else{
+        } else {
             return [
                 "status" => "error",
                 "message" => "Data validation failed. Access errors key for specific errors",
@@ -238,6 +238,32 @@ class SalesController implements CrudOps
             ];
         }
 
+    }
+
+    public function checkout($data)
+    {
+        if (sizeof($data) > 0) {
+            foreach ($data as $item):
+               if ($this->create($item)["status"] == "success") {
+                   $this->updateQty($item['product_id'], $item['quantity']);
+               }
+            endforeach;
+        }
+    }
+
+    public function updateQty($productId, $qty){
+        try{
+            $db = new DB();
+            $stmt = $db->connect()
+                ->prepare("UPDATE products SET quantity=quantity-{$qty} WHERE id={$productId}");
+            if ($stmt->execute()){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (\PDOException $e){
+            echo $e->getMessage();
+        }
     }
 
 }

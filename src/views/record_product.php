@@ -22,7 +22,7 @@ if( isset( $_POST['store_id'] )&& isset( $_POST['name'] )&& isset( $_POST['type'
     $cost = $_POST['cost'];
     $quantity = $_POST['quantity'];
     $data = [
-            "store_id"=>$store_id,
+            "store_id12"=>$store_id,
             "name"=>$name,
             "type"=>$type,
             "description"=>$description,
@@ -30,6 +30,7 @@ if( isset( $_POST['store_id'] )&& isset( $_POST['name'] )&& isset( $_POST['type'
             "quantity"=>$quantity
 
     ];
+
     $response = $productCtrl->create($data);
 
     if ($response['status'] =="success"){
@@ -37,7 +38,6 @@ if( isset( $_POST['store_id'] )&& isset( $_POST['name'] )&& isset( $_POST['type'
     }elseif($response['status'] == 'error'){
         $error_msg .= $response['message'];
     }
-
 }
 
 $stores= $storeCtrl->all();
@@ -60,8 +60,9 @@ $stores= $storeCtrl->all();
                     if($success_msg!="")
                         {echo $success_msg;}
                     elseif($error_msg!="")
-                    { echo $success_msg;}
+                    { echo $error_msg;}
                     ?>
+
 
                 </div>
             </div>
