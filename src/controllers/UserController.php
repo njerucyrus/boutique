@@ -1,10 +1,10 @@
 <?php
 
 namespace src\controllers;
-
-use src\interfaces\CrudOps;
+require_once __DIR__.'/../interfaces/CrudOps.php';
+require_once __DIR__.'/../db/DB.php';
 use src\db\DB;
-
+use src\interfaces\CrudOps;
 class UserController implements CrudOps
 {
 

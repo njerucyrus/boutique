@@ -1,6 +1,7 @@
 <?php
 namespace src\controllers;
-
+require_once __DIR__.'/../interfaces/CrudOps.php';
+require_once __DIR__.'/../db/DB.php';
 use src\interfaces\CrudOps;
 use src\db\DB;
 
