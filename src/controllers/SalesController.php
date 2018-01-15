@@ -1,13 +1,15 @@
 <?php
+
 namespace src\controllers;
 
-require_once __DIR__.'/../interfaces/CrudOps.php';
-require_once __DIR__.'/../db/DB.php';
+require_once __DIR__ . '/../interfaces/CrudOps.php';
+require_once __DIR__ . '/../db/DB.php';
 
 use src\db\DB;
 use src\interfaces\CrudOps;
 
-class SalesController implements CrudOps{
+class SalesController implements CrudOps
+{
 
     public function create(array $data)
     {
@@ -87,17 +89,26 @@ class SalesController implements CrudOps{
       FROM sales s, products p, customers c INNER JOIN sales sl
       ON c.id=sl.customer_id WHERE sl.id= '{$id}' ORDER BY sl.date_purchased ASC";
         $db = new DB();
-        $stmt = $db->connect()
-            ->prepare($sql);
-        $query = $stmt->execute();
-        if ($query) {
-            return $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        } else {
-            return [];
+        try {
+            $stmt = $db->connect()
+                ->prepare($sql);
+            $query = $stmt->execute();
+            if ($query) {
+                return $stmt->fetch(\PDO::FETCH_ASSOC);
+
+            } else {
+                return [];
+            }
+        } catch (\PDOException $e) {
+            return [
+                "status" => "error",
+                "message" => "Exception Error {$e->getMessage()}"
+            ];
         }
 
     }
+
     public function delete($id)
     {
         $db = new DB();
@@ -131,7 +142,7 @@ class SalesController implements CrudOps{
 
     public function all()
     {
-        $sql = "SELECT DISTINCT s.receipt_no, p.name as product_name, p.cost,
+        $sql = "SELECT DISTINCT s.receipt_no, p.name AS product_name, p.cost,
        c.first_name, c.last_name, s.quantity, s.date_purchased
       FROM sales s, products p, customers c INNER JOIN sales sl
       ON c.id=sl.customer_id ORDER BY sl.date_purchased ASC";
@@ -146,7 +157,7 @@ class SalesController implements CrudOps{
             } else {
                 return [];
             }
-        }catch (\PDOException $e) {
+        } catch (\PDOException $e) {
 
             return [
                 "status" => "error",
