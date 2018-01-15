@@ -38,7 +38,8 @@ class UserController implements CrudOps
                     ->prepare("INSERT INTO users(username, password, user_type)
                           VALUES (:username, :password, :user_type)");
 
-               $stmt->bindParam(":username", $data['username']);
+                $stmt->bindParam(":username", $data['username']);
+
                 $stmt->bindValue(":password", password_hash($data['password'], PASSWORD_BCRYPT));
                 $stmt->bindParam(":user_type", $data['user_type']);
                 $query = $stmt->execute();

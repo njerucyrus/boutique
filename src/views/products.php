@@ -23,8 +23,8 @@ $products= $productController->all();
         <div><b>Store Name:</b> <?php echo $product['store_name']?><br><br></div>
         <div><b>Description</b><br><?php echo $product['description']?><br><br></div>
         <div><b>Price:</b> $ <?php echo $product['cost']?><br><br></div>
-            <div><a href="register_user.php">Buy</div>
-            <div><a href="register_user.php">Lease</div>
+            <div><a href="register_user.php">Buy
+            <a href="register_user.php">Lease</div>
 
         </td>
 
