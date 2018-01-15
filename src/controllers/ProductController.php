@@ -12,6 +12,29 @@ class ProductController implements CrudOps {
     
     public function create($data)
     {
+        $errors = [];
+        if (!is_array($data)) {
+            array_push($errors, "parameter must be an array");
+        }
+
+        if (!array_key_exists("store_id", $data)) {
+            array_push($errors, "store_id key missing in data passed");
+        }
+
+        if (!array_key_exists("name", $data)) {
+            array_push($errors, "name key missing in data passed");
+        }
+        if (!array_key_exists("type", $data)) {
+            array_push($errors, "type key missing in data passed");
+        }
+        if (!array_key_exists("quantity", $data)) {
+            array_push($errors, "quantity key missing in data passed");
+        }
+        if (!array_key_exists("cost", $data)) {
+            array_push($errors, "cost key missing in data passed");
+        }
+
+        if (sizeof($errors) == 0) {
         $db = new DB();
         try {
             $stmt = $db->connect()
@@ -45,74 +68,122 @@ class ProductController implements CrudOps {
             ];
 
         }
+        } else{
+            return [
+                "status"=>"error",
+                "message"=>"Data validation failed. Access errors key for specific errors",
+                "errors" =>$errors
+            ];
+        }
     }
 
     public function update($id, $data)
     {
-        $db = new DB();
-        try {
-            $stmt = $db->connect()
-                ->prepare("UPDATE  products SET store_id=:store_id, name=:name,
+        $errors = [];
+        if (!is_array($data)) {
+            array_push($errors, "parameter must be an array");
+        }
+
+        if (!array_key_exists("store_id", $data)) {
+            array_push($errors, "store_id key missing in data passed");
+        }
+
+        if (!array_key_exists("name", $data)) {
+            array_push($errors, "name key missing in data passed");
+        }
+        if (!array_key_exists("type", $data)) {
+            array_push($errors, "type key missing in data passed");
+        }
+        if (!array_key_exists("quantity", $data)) {
+            array_push($errors, "quantity key missing in data passed");
+        }
+        if (!array_key_exists("cost", $data)) {
+            array_push($errors, "cost key missing in data passed");
+        }
+        if(!is_int($id)){
+            array_push($errors, "id not an Integer");
+        }
+        if(sizeof($errors) == 0) {
+            $db = new DB();
+            try {
+                $stmt = $db->connect()
+                    ->prepare("UPDATE  products SET store_id=:store_id, name=:name,
                           type=:type, description=:description
                           WHERE id=:id");
 
-            $stmt->bindParam(":id", $id);
-            $stmt->bindParam(":store_id", $data['store_id']);
-            $stmt->bindParam(":name", $data['name']);
-            $stmt->bindParam(":type", $data['type']);
-            $stmt->bindParam(":description", $data['description']);
-            $stmt->bindParam(":cost", $data['cost']);
-            $stmt->bindParam(":quantity", $data['quantity']);
-            $query = $stmt->execute();
-            if ($query) {
-                return [
-                    "status" => "success",
-                    "message" => "Product updated successfully"
-                ];
-            } else {
+                $stmt->bindParam(":id", $id);
+                $stmt->bindParam(":store_id", $data['store_id']);
+                $stmt->bindParam(":name", $data['name']);
+                $stmt->bindParam(":type", $data['type']);
+                $stmt->bindParam(":description", $data['description']);
+                $stmt->bindParam(":cost", $data['cost']);
+                $stmt->bindParam(":quantity", $data['quantity']);
+                $query = $stmt->execute();
+                if ($query) {
+                    return [
+                        "status" => "success",
+                        "message" => "Product updated successfully"
+                    ];
+                } else {
+                    return [
+                        "status" => "error",
+                        "message" => "Error Occurred Failed to Product not updated"
+                    ];
+                }
+
+            } catch (\PDOException $e) {
+
                 return [
                     "status" => "error",
-                    "message" => "Error Occurred Failed to Product not updated"
+                    "message" => "Exception Error {$e->getMessage()}"
                 ];
+
             }
-
-        } catch (\PDOException $e) {
-
+        }else{
             return [
-                "status" => "error",
-                "message" => "Exception Error {$e->getMessage()}"
+                "status"=>"error",
+                "message"=>"Data validation failed. Access errors key for specific errors",
+                "errors" =>$errors
             ];
-
         }
     }
 
     public function getId($id)
     {
-        $sql = "SELECT  p.name, s.store_name as store_name,
+        if (is_int($id)) {
+            $sql = "SELECT  p.name, s.store_name as store_name,
                 p.description,p.cost, p.quantity
                 FROM products p  INNER  JOIN stores s ON s.id = p.store_id AND p.id='{$id}'";
-        try{
-        $db = new DB();
-        $stmt = $db->connect()
-            ->prepare($sql);
-        $query = $stmt->execute();
-        if ($query) {
-            return $stmt->fetch(\PDO::FETCH_ASSOC);
+            try {
+                $db = new DB();
+                $stmt = $db->connect()
+                    ->prepare($sql);
+                $query = $stmt->execute();
+                if ($query) {
+                    return $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        } else {
-            return [];
-        }
-        } catch (\PDOException $e) {
+                } else {
+                    return [];
+                }
+            } catch (\PDOException $e) {
 
+                return [
+                    "status" => "error",
+                    "message" => "Exception Error {$e->getMessage()}"
+                ];
+            }
+        }else{
             return [
                 "status" => "error",
-                "message" => "Exception Error {$e->getMessage()}"
+                "message" => "Data validation failed. Access errors key for specific errors",
+                "errors" => ["Expects an integer"]
             ];
         }
     }
 
     public function delete($id)
     {
+        if (is_int($id)){
         $db = new DB();
         try {
             $stmt = $db->connect()
@@ -140,6 +211,13 @@ class ProductController implements CrudOps {
             ];
 
         }
+        }else{
+            return [
+                "status" => "error",
+                "message" => "Data validation failed. Access errors key for specific errors",
+                "errors" => ["Expects an integer"]
+            ];
+        }
     }
 
     public function all()
@@ -153,7 +231,7 @@ class ProductController implements CrudOps {
                 ->prepare($sql);
             $query = $stmt->execute();
             if ($query) {
-                return $stmt->fetch(\PDO::FETCH_ASSOC);
+                return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
             } else {
                 return [];

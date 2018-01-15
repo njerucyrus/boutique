@@ -18,136 +18,222 @@ class CustomerController implements CrudOps
 {
     public function create($data)
     {
-        $db = new DB();
-        try {
-            $stmt = $db->connect()
-                ->prepare("INSERT INTO customers(user_id, first_name, last_name, address, telephone, dob)
+        $errors = [];
+        if (!is_array($data)) {
+            array_push($errors, "parameter must be an array");
+        }
+
+        if (!array_key_exists("user_id", $data)) {
+            array_push($errors, "user_id key missing in data passed");
+        }
+
+        if (!array_key_exists("first_name", $data)) {
+            array_push($errors, "first_name key missing in data passed");
+        }
+        if (!array_key_exists("address", $data)) {
+            array_push($errors, "address key missing in data passed");
+        }
+        if (!array_key_exists("last_name", $data)) {
+            array_push($errors, "last_name key missing in data passed");
+        }
+        if (!array_key_exists("telephone", $data)) {
+            array_push($errors, "telephone key missing in data passed");
+        }
+        if (!array_key_exists("dob", $data)) {
+            array_push($errors, "dob key missing in data passed");
+        }
+
+        if (sizeof($errors) == 0) {
+
+            $db = new DB();
+            try {
+                $stmt = $db->connect()
+                    ->prepare("INSERT INTO customers(user_id, first_name, last_name, address, telephone, dob)
                           VALUES (:user_id, :first_name, :last_name, :address, :telephone, :dob)");
 
-            $stmt->bindParam(":user_id", $data['user_id']);
-            $stmt->bindParam(":first_name", $data['first_name']);
-            $stmt->bindParam(":last_name", $data['last_name']);
-            $stmt->bindParam(":address", $data['address']);
-            $stmt->bindParam(":telephone", $data['telephone']);
-            $stmt->bindParam(":dob", $data['dob']);
+                $stmt->bindParam(":user_id", $data['user_id']);
+                $stmt->bindParam(":first_name", $data['first_name']);
+                $stmt->bindParam(":last_name", $data['last_name']);
+                $stmt->bindParam(":address", $data['address']);
+                $stmt->bindParam(":telephone", $data['telephone']);
+                $stmt->bindParam(":dob", $data['dob']);
 
-            $query = $stmt->execute();
-            if ($query) {
-                return [
-                    "status" => "success",
-                    "message" => "Customer Info added successfully"
-                ];
-            } else {
+                $query = $stmt->execute();
+                if ($query) {
+                    return [
+                        "status" => "success",
+                        "message" => "Customer Info added successfully"
+                    ];
+                } else {
+                    return [
+                        "status" => "error",
+                        "message" => "Error Occurred Failed to add Customer Info {$stmt->errorInfo()[2]}"
+                    ];
+                }
+
+            } catch (\PDOException $e) {
+                $e->getMessage();
                 return [
                     "status" => "error",
-                    "message" => "Error Occurred Failed to add Customer Info {$stmt->errorInfo()[2]}"
+                    "message" => "Exception Error {$e->getMessage()}"
                 ];
+
             }
-
-        } catch (\PDOException $e) {
-            $e->getMessage();
+        }else{
             return [
-                "status" => "error",
-                "message" => "Exception Error {$e->getMessage()}"
+                "status"=>"error",
+                "message"=>"Data validation failed. Access errors key for specific errors",
+                "errors" =>$errors
             ];
-
         }
     }
 
     public function update($id, $data)
     {
-        $db = new DB();
-        try {
-            $stmt = $db->connect()
-                ->prepare("UPDATE  customers SET user_id=:user_id, first_name=:first_name,
+        $errors = [];
+        if (!is_array($data)) {
+            array_push($errors, "parameter must be an array");
+        }
+
+        if (!array_key_exists("user_id", $data)) {
+            array_push($errors, "user_id key missing in data passed");
+        }
+
+        if (!array_key_exists("first_name", $data)) {
+            array_push($errors, "first_name key missing in data passed");
+        }
+        if (!array_key_exists("address", $data)) {
+            array_push($errors, "address key missing in data passed");
+        }
+        if (!array_key_exists("last_name", $data)) {
+            array_push($errors, "last_name key missing in data passed");
+        }
+        if (!array_key_exists("telephone", $data)) {
+            array_push($errors, "telephone key missing in data passed");
+        }
+        if (!array_key_exists("dob", $data)) {
+            array_push($errors, "dob key missing in data passed");
+        }
+        if (!is_int($id)) {
+            array_push($errors, "id not and integer");
+        }
+
+        if (sizeof($errors) == 0) {
+            $db = new DB();
+            try {
+                $stmt = $db->connect()
+                    ->prepare("UPDATE  customers SET user_id=:user_id, first_name=:first_name,
                           last_name=:last_name, address=:address, telephone=:telephone, dob=:dob
                           WHERE id=:id");
 
-            $stmt->bindParam(":id", $id);
+                $stmt->bindParam(":id", $id);
 
-            $stmt->bindParam(":user_id", $data['user_id']);
-            $stmt->bindParam(":first_name", $data['first_name']);
-            $stmt->bindParam(":last_name", $data['last_name']);
-            $stmt->bindParam(":address", $data['address']);
-            $stmt->bindParam(":telephone", $data['telephone']);
-            $stmt->bindParam(":dob", $data['dob']);
+                $stmt->bindParam(":user_id", $data['user_id']);
+                $stmt->bindParam(":first_name", $data['first_name']);
+                $stmt->bindParam(":last_name", $data['last_name']);
+                $stmt->bindParam(":address", $data['address']);
+                $stmt->bindParam(":telephone", $data['telephone']);
+                $stmt->bindParam(":dob", $data['dob']);
 
-            $query = $stmt->execute();
-            if ($query) {
-                return [
-                    "status" => "success",
-                    "message" => "Customer Info updated successfully"
-                ];
-            } else {
+                $query = $stmt->execute();
+                if ($query) {
+                    return [
+                        "status" => "success",
+                        "message" => "Customer Info updated successfully"
+                    ];
+                } else {
+                    return [
+                        "status" => "error",
+                        "message" => "Error Occurred Failed , Customer not  updated {$stmt->errorInfo()}"
+                    ];
+                }
+
+            } catch (\PDOException $e) {
+
                 return [
                     "status" => "error",
-                    "message" => "Error Occurred Failed , Customer not  updated {$stmt->errorInfo()}"
+                    "message" => "Exception Error {$e->getMessage()}"
                 ];
+
             }
-
-        } catch (\PDOException $e) {
-
+        }else{
             return [
-                "status" => "error",
-                "message" => "Exception Error {$e->getMessage()}"
+                "status"=>"error",
+                "message"=>"Data validation failed. Access errors key for specific errors",
+                "errors" =>$errors
             ];
-
         }
     }
 
     public function delete($id)
     {
-        $db = new DB();
-        try {
-            $stmt = $db->connect()
-                ->prepare("DELETE FROM customers WHERE  id=:id");
-            $stmt->bindParam(":id", $id);
+        if (is_int($id)) {
+            $db = new DB();
+            try {
+                $stmt = $db->connect()
+                    ->prepare("DELETE FROM customers WHERE  id=:id");
+                $stmt->bindParam(":id", $id);
 
-            $query = $stmt->execute();
-            if ($query) {
-                return [
-                    "status" => "success",
-                    "message" => "Customer deleted"
-                ];
-            } else {
+                $query = $stmt->execute();
+                if ($query) {
+                    return [
+                        "status" => "success",
+                        "message" => "Customer deleted"
+                    ];
+                } else {
+                    return [
+                        "status" => "error",
+                        "message" => "Error Occurred Failed to delete store"
+                    ];
+                }
+
+
+            } catch (\PDOException $e) {
                 return [
                     "status" => "error",
-                    "message" => "Error Occurred Failed to delete store"
+                    "message" => "Exception Error {$e->getMessage()}"
                 ];
+
             }
-
-
-        } catch (\PDOException $e) {
+        }else{
             return [
                 "status" => "error",
-                "message" => "Exception Error {$e->getMessage()}"
+                "message" => "Data validation failed. Access errors key for specific errors",
+                "errors" => ["Expects an integer"]
             ];
-
         }
     }
 
     public function getId($id)
     {
-        $sql = "SELECT username, first_name, last_name, address, telephone,dob
+        if (is_int($id)) {
+            $sql = "SELECT username, first_name, last_name, address, telephone,dob
                 FROM customers INNER JOIN users on users.id = customers.user_id WHERE customers.id='{$id}'";
 
-        try {
-            $db = new DB();
-            $stmt = $db->connect()
-                ->prepare($sql);
-            $query = $stmt->execute();
+            try {
+                $db = new DB();
+                $stmt = $db->connect()
+                    ->prepare($sql);
+                $query = $stmt->execute();
 
-            if ($query) {
-                return $stmt->fetch(\PDO::FETCH_ASSOC);
+                if ($query) {
+                    return $stmt->fetch(\PDO::FETCH_ASSOC);
 
-            } else {
-                return [];
+                } else {
+                    return [];
+                }
+
+            } catch (\PDOException $e) {
+                return [
+                    "status" => "error",
+                    "message" => "Exception Error {$e->getMessage()}"
+                ];
             }
-
-        } catch (\PDOException $e) {
+        }else{
             return [
                 "status" => "error",
-                "message" => "Exception Error {$e->getMessage()}"
+                "message" => "Data validation failed. Access errors key for specific errors",
+                "errors" => ["Expects an integer"]
             ];
         }
 
