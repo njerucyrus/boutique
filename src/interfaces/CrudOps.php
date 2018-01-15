@@ -11,8 +11,8 @@ namespace src\interfaces;
 
 interface CrudOps
 {
-  public function create(array $data);
-  public function update($id, array $data);
+  public function create($data);
+  public function update($id, $data);
   public function delete($id);
   public function getId($id);
   public function all();
