@@ -2,6 +2,9 @@
 
 namespace src\controllers;
 
+require_once __DIR__.'/../interfaces/CrudOps.php';
+require_once __DIR__.'/../db/DB.php';
+
 use src\interfaces\CrudOps;
 use src\db\DB;
 
@@ -16,7 +19,7 @@ class UserController implements CrudOps
                 ->prepare("INSERT INTO users(username, password, user_type)
                           VALUES (:username, :password, user_type)");
             $stmt->bindParam(":username", $data['username']);
-            $stmt->bindParam(":password", bcrypt($data['password'], PASSWORD_BCRYPT));
+            $stmt->bindParam(":password", password_hash($data['password'], PASSWORD_BCRYPT));
             $stmt->bindParam(":user_type", $data['user_type']);
             $query = $stmt->execute();
             if ($query) {
