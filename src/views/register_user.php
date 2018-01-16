@@ -1,4 +1,5 @@
 <?php
+session_status();
 require __DIR__.'/../controllers/UserController.php';
 require __DIR__.'/../controllers/StoreController.php';
 
@@ -31,7 +32,7 @@ if( isset( $_POST['username'] )&&isset( $_POST['password'] )&&isset( $_POST['use
 <html>
 
 <body bgcolor="#f0f8ff">
-
+<div style="width:800px; margin:0 auto;border: 3px solid #f1f1f1;"><h3><?php include_once "admin_menu.php"?></h3></div>
     <form METHOD="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"  style="width:800px; margin:0 auto;border: 3px solid #f1f1f1;">
 
         <div >

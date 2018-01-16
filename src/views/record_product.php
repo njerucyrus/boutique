@@ -1,5 +1,5 @@
 <?php
-
+session_status();
 require_once __DIR__.'/../controllers/ProductController.php';
 require_once __DIR__.'/../controllers/StoreController.php';
 
@@ -39,6 +39,10 @@ if( isset( $_POST['store_id'] )&& isset( $_POST['name'] )&& isset( $_POST['type'
     }
 
 }
+else
+{
+    $error_msg .="All fields required";
+}
 
 $stores= $storeCtrl->all();
 ?>
@@ -49,19 +53,22 @@ $stores= $storeCtrl->all();
 </head>
 <body bgcolor="#f0f8ff">
 
-
+<div>
+    <div style="width:800px; margin:0 auto;border: 3px solid #f1f1f1;"><h3><?php include_once "admin_menu.php"?></h3></div>
     <form METHOD="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"  style="width:800px; margin:0 auto;border: 3px solid #f1f1f1;">
 
         <div >
             <div>
                 <h1>Record Product</h1>
                 <div>
+                    <h3>
                     <?php
                     if($success_msg!="")
                         {echo $success_msg;}
                     elseif($error_msg!="")
-                    { echo $success_msg;}
+                    { echo $error_msg;}
                     ?>
+                    </h3>
 
                 </div>
             </div>
@@ -99,12 +106,12 @@ $stores= $storeCtrl->all();
             </div>
             <div>
                 <label><b>Cost</b></label>
-                <input type="type" placeholder="Product cost" name="cost" required>
+                <input type="number" placeholder="Product cost" name="cost" required>
                 <br> <br>
             </div>
             <div>
                 <label><b>Quantity</b></label>
-                <input type="type" placeholder="Product Quantity" name="quantity" required>
+                <input type="number" placeholder="Product Quantity" name="quantity" required>
                 <br> <br>
             </div>
 

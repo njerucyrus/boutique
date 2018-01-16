@@ -1,4 +1,5 @@
 <?php
+session_status();
 require __DIR__.'/../controllers/CustomerController.php';
 require __DIR__.'/../controllers/UserController.php';
 
@@ -9,7 +10,7 @@ use src\controllers\UserController;
 $userCtrl = new UserController();
 $customerCtrl = new CustomerController();
 $success_msg= $error_msg = '';
-print_r($_POST);
+
 if( isset( $_POST['username'] )&&isset( $_POST['password'] )&&$_POST['first_name'] &&isset( $_POST['last_name'] )&&isset( $_POST['address'] )&&isset( $_POST['telephone'] )&&isset( $_POST['dob'] )){
 
     $username = $_POST['username'];
@@ -49,7 +50,7 @@ if( isset( $_POST['username'] )&&isset( $_POST['password'] )&&$_POST['first_name
 }
 else
 {
-    echo "failed";
+
     $error_msg .="All fields required";
 }
 ?>
@@ -57,7 +58,8 @@ else
 <html>
 
 <body bgcolor="#f0f8ff">
-
+<div>
+    <div style="width:800px; margin:0 auto;border: 3px solid #f1f1f1;"><h3><?php include_once "admin_menu.php"?></h3></div>
 <form METHOD="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"  style="width:800px; margin:0 auto;border: 3px solid #f1f1f1;">
 
     <div >
