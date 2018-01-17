@@ -110,7 +110,7 @@ class ProductController implements CrudOps
             try {
                 $stmt = $db->connect()
                     ->prepare("UPDATE  products SET store_id=:store_id, name=:name,
-                          type=:type, description=:description
+                          type=:type, description=:description, cost=:cost,quantity=:quantity
                           WHERE id=:id");
 
                 $stmt->bindParam(":id", $id);
@@ -224,7 +224,9 @@ class ProductController implements CrudOps
 
     public function all()
     {
-        $sql = "SELECT  p.name, s.store_name AS store_name,
+
+
+        $sql = "SELECT p.id, p.name, s.store_name as store_name,p.type,
                 p.description,p.cost, p.quantity
                 FROM products p  INNER  JOIN stores s ON s.id = p.store_id WHERE 1";
         try {

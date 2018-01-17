@@ -215,7 +215,7 @@ class UserController implements CrudOps
 
             $db = new DB();
             $stmt = $db->connect()
-                ->prepare("SELECT t.* FROM users t WHERE  t.id=:id");
+                ->prepare("SELECT t.* FROM users t ");
             $stmt->bindParam(":id", $id);
             $query = $stmt->execute();
 
