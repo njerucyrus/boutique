@@ -2,7 +2,7 @@
 session_status();
 require_once __DIR__.'/../controllers/ProductController.php';
 require_once __DIR__.'/../controllers/StoreController.php';
-
+require 'urlfy.php';
 
 
 
@@ -45,11 +45,21 @@ else
 }
 
 $stores= $storeCtrl->all();
+$products =$productCtrl->all();
+
+
+
+
+
 ?>
 <!DOCTYPE HTML>
 <html>
 <head>
-
+<style>
+    table, th, td {
+        border: 1px solid lightgrey;
+    }
+</style>
 </head>
 <body bgcolor="#f0f8ff">
 
@@ -89,37 +99,80 @@ $stores= $storeCtrl->all();
             </div>
             <div>
             <label><b>Product Name</b></label>
-            <input type="text" placeholder="Enter Product Name" name="name" required><br/>
+            <input type="text" placeholder="Enter Product Name" name="name" value="<?php echo isset($_GET['name'])? $_GET['name']: '' ?>"required><br/>
                 <br>
             </div>
 
             <div>
             <label><b>Type</b></label>
-            <input type="type" placeholder="Enter Product type" name="type" required>
+            <input type="text" placeholder="Enter Product type" name="type"value="<?php echo isset($_GET['type'])? $_GET['type']: '' ?>" required>
                 <br> <br>
             </div>
 
             <div>
                 <label><b>Description</b></label>
-                <textarea rows="2" cols="50" name="description"></textarea>
+                <textarea rows="2" cols="50" name="description" ><?php echo isset($_GET['description'])? $_GET['description']: '' ?></textarea>
                 <br> <br>
             </div>
             <div>
                 <label><b>Cost</b></label>
-                <input type="number" placeholder="Product cost" name="cost" required>
+                <input type="number" placeholder="Product cost" name="cost" value="<?php echo isset($_GET['cost'])? $_GET['cost']: '' ?>"required>
                 <br> <br>
             </div>
             <div>
                 <label><b>Quantity</b></label>
-                <input type="number" placeholder="Product Quantity" name="quantity" required>
+                <input type="number" placeholder="Product Quantity" name="quantity" value="<?php echo isset($_GET['quantity'])? $_GET['quantity']: '' ?>" required>
                 <br> <br>
             </div>
 
 
             <input type="submit" value="Submit">
+            <?php
+
+            if(!empty(!empty( isset($_GET['id']))))
+            {
+
+                echo '<input type="submit" name="edit" value="edit">';
+            }
+
+
+            ?>
 
         </div>
 
     </form>
+
+    <table>
+        <h1>Products</h1>
+        <tr>
+            <th>ID</th>
+        <th>Product Name</th>
+        <th>Type</th>
+        <th>Store Name</th>
+        <th>Description</th>
+        <th>Cost</th>
+        <th>Quantity</th>
+        <th colspan="2">Action</th>
+        </tr>
+        <?php foreach ($products as $product): ?>
+        <tr>
+            <td><?php echo$product['id']?></td>
+            <td><?php echo$product['name']?></td>
+            <td><?php echo$product['type']?></td>
+            <td><?php echo$product['store_name']?></td>
+            <td><?php echo$product['description']?></td>
+            <td><?php echo$product['cost']?></td>
+            <td><?php echo$product['quantity']?></td>
+            <td >
+                <a href="record_product.php?<?php echo createUrlParams($product)?>"><button type="button">Edit</button></a></td>
+            <td>
+                <a href="confirm_delete.php?product_id=<?php echo $product['id']?>"><button type="button" style="color: red">Delete</button></a>
+            </td>
+        </tr>
+        <?php endforeach;?>
+    </table>
+
+
+
 </body>
 </html>

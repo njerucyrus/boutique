@@ -222,7 +222,7 @@ class ProductController implements CrudOps {
 
     public function all()
     {
-        $sql = "SELECT  p.name, s.store_name as store_name,
+        $sql = "SELECT p.id, p.name, s.store_name as store_name,p.type,
                 p.description,p.cost, p.quantity
                 FROM products p  INNER  JOIN stores s ON s.id = p.store_id WHERE 1";
         try{

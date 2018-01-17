@@ -2,12 +2,15 @@
 session_status();
 require __DIR__.'/../controllers/UserController.php';
 require __DIR__.'/../controllers/StoreController.php';
+require 'urlfy.php';
 
 
 use src\controllers\UserController;
 use src\controllers\StoreController;
 $userCtrl = new UserController();
 $success_msg= $error_msg = '';
+
+
 
 
 if( isset( $_POST['username'] )&&isset( $_POST['password'] )&&isset( $_POST['user_type'] )){
@@ -27,12 +30,20 @@ if( isset( $_POST['username'] )&&isset( $_POST['password'] )&&isset( $_POST['use
     }
 
 }
+else
+{
+    $error_msg .="All fields required";
+}
+
+$users = $userCtrl->all();
+
 ?>
 <!DOCTYPE HTML>
 <html>
 
 <body bgcolor="#f0f8ff">
 <div style="width:800px; margin:0 auto;border: 3px solid #f1f1f1;"><h3><?php include_once "admin_menu.php"?></h3></div>
+<div>
     <form METHOD="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"  style="width:800px; margin:0 auto;border: 3px solid #f1f1f1;">
 
         <div >
@@ -51,7 +62,7 @@ if( isset( $_POST['username'] )&&isset( $_POST['password'] )&&isset( $_POST['use
             </div>
             <div>
             <label><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="username" required><br/>
+            <input type="text" placeholder="Enter Username" name="username" value="<?php echo isset($_GET['username'])? $_GET['username']: '' ?>" required><br/>
             </div>
 
             <div>
@@ -73,5 +84,29 @@ if( isset( $_POST['username'] )&&isset( $_POST['password'] )&&isset( $_POST['use
         </div>
 
     </form>
+
+</div>
+<div>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>User type</th>
+            <th>Action</th>
+        </tr>
+        <?php foreach ($users as $user):?>
+        <?php unset($user['password']) ?>
+        <tr>
+            <td><?php echo $user['id'];?></td>
+            <td><?php echo $user['username'];?></td>
+            <td><?php echo $user['user_type'];?></td>
+            <td><a href="register_user.php?<?php echo createUrlParams($user)?>"><button type="button" >Edit</button></a></div>
+<a href="confirm_delete.php?user_id=<?php echo $user['id']?>"><button type="button" >Delete</button></a></div>
+        </td>
+        </tr>
+<?php endforeach;?>
+
+    </table>
+</div>
 </body>
 </html>
