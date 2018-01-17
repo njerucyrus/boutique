@@ -108,7 +108,7 @@ class ProductController implements CrudOps {
             try {
                 $stmt = $db->connect()
                     ->prepare("UPDATE  products SET store_id=:store_id, name=:name,
-                          type=:type, description=:description
+                          type=:type, description=:description, cost=:cost,quantity=:quantity
                           WHERE id=:id");
 
                 $stmt->bindParam(":id", $id);
