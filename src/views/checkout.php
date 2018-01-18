@@ -77,8 +77,11 @@ $customer = UserController::getAssociatedCustomer($_SESSION['user_id']);
                                     <li>Name: <?php echo $customer['first_name']. " ". $customer['last_name'] ?> </li>
                                     <li>Address: <?php echo "{$customer['address']}" ?> </li>
                                     <li>Telephone: <?php echo "{$customer['telephone']}"?></li>
-                                    <li><a href="cart_action.php?action=buy" style="color: white;">Buy Products</a> </li>
-                                    <li><a href="cart_action.php?action=lease" style="color: darkred">Lease Products</a> </li>
+                                    <li><a href="cart_action.php?action=buy" style="color: white;"><button>Buy Products</button></a> </li>
+                                    <br>
+                                    OR
+                                    <br>
+                                    <li><a href="cart_action.php?action=lease" style="color: darkred"><button>Lease Products</button></a> </li>
                                 </ul>
                             </div>
                         </aside>

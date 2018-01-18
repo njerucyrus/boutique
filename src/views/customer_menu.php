@@ -11,7 +11,7 @@
 
 
     <?php
-    if(!isset($login_session)){
+    if(!isset($_SESSION['user_id'])){
 
         ?>
 
