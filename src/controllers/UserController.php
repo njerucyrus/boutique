@@ -46,7 +46,8 @@ class UserController implements CrudOps
                 if ($query) {
                     return [
                         "status" => "success",
-                        "message" => "User Account created successfully"
+                        "message" => "User Account created successfully",
+                        "id"=>$db->connect()->lastInsertId()
                     ];
                 } else {
                     return [

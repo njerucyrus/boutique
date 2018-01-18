@@ -4,12 +4,14 @@ namespace src\controllers;
 
 require_once __DIR__ . '/../interfaces/CrudOps.php';
 require_once __DIR__ . '/../db/DB.php';
+require_once __DIR__ . '/../controllers/TransactProduct.php';
 
 use src\db\DB;
 use src\interfaces\CrudOps;
 
 class SalesController implements CrudOps
 {
+    use TransactProduct;
 
     public function create($data)
     {
@@ -31,18 +33,23 @@ class SalesController implements CrudOps
         if (!array_key_exists("quantity", $data)) {
             array_push($errors, "quantity key missing in data passed");
         }
+        if (!array_key_exists("cost", $data)) {
+            array_push($errors, "cost key missing in data passed");
+        }
+
 
         if (sizeof($errors) == 0) {
 
             $db = new DB();
             try {
                 $stmt = $db->connect()
-                    ->prepare("INSERT INTO sales(receipt_no, product_id, customer_id, quantity)
-                          VALUES (:receipt_no, :product_id, :customer_id, :quantity)");
+                    ->prepare("INSERT INTO sales(receipt_no, product_id, customer_id, quantity, cost)
+                          VALUES (:receipt_no, :product_id, :customer_id, :quantity, :cost)");
                 $stmt->bindParam(":receipt_no", $data['receipt_no']);
                 $stmt->bindParam(":product_id", $data['product_id']);
                 $stmt->bindParam(":customer_id", $data['customer_id']);
                 $stmt->bindParam(":quantity", $data['quantity']);
+                $stmt->bindParam(":cost", $data['cost']);
                 $query = $stmt->execute();
                 if ($query) {
                     return [
@@ -93,6 +100,9 @@ class SalesController implements CrudOps
         if (!array_key_exists("quantity", $data)) {
             array_push($errors, "quantity key missing in data passed");
         }
+        if (!array_key_exists("cost", $data)) {
+            array_push($errors, "cost key missing in data passed");
+        }
         if (!is_int($id)) {
             array_push($errors, "id not an integer");
         }
@@ -103,7 +113,7 @@ class SalesController implements CrudOps
             try {
                 $stmt = $db->connect()
                     ->prepare("UPDATE  sales SET receipt_no=:receipt_no, product_id=:product_id,
-                          customer_id=:customer_id, quantity=:quantity
+                          customer_id=:customer_id, quantity=:quantity, cost=:cost
                           WHERE id=:id");
 
                 $stmt->bindParam(":id", $id);
@@ -111,11 +121,12 @@ class SalesController implements CrudOps
                 $stmt->bindParam(":product_id", $data['product_id']);
                 $stmt->bindParam(":customer_id", $data['customer_id']);
                 $stmt->bindParam(":quantity", $data['quantity']);
+                $stmt->bindParam(":cost", $data['cost']);
                 $query = $stmt->execute();
                 if ($query) {
                     return [
                         "status" => "success",
-                        "message" => "Store updated successfully"
+                        "message" => "Sale updated successfully"
                     ];
                 } else {
                     return [
@@ -240,30 +251,10 @@ class SalesController implements CrudOps
 
     }
 
-    public function checkout($data)
-    {
-        if (sizeof($data) > 0) {
-            foreach ($data as $item):
-               if ($this->create($item)["status"] == "success") {
-                   $this->updateQty($item['product_id'], $item['quantity']);
-               }
-            endforeach;
-        }
-    }
 
-    public function updateQty($productId, $qty){
-        try{
-            $db = new DB();
-            $stmt = $db->connect()
-                ->prepare("UPDATE products SET quantity=quantity-{$qty} WHERE id={$productId}");
-            if ($stmt->execute()){
-                return true;
-            }else{
-                return false;
-            }
-        } catch (\PDOException $e){
-            echo $e->getMessage();
-        }
-    }
+
+
+
+
 
 }

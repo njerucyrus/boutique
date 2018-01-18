@@ -249,7 +249,7 @@ class ProductController implements CrudOps
         }
     }
 
-    public function moveProduct($data)
+    public static function moveProduct($data)
     {
         $productId = $data['product']['id'];
         $currentQty = $data['product']['quantity'];
@@ -264,7 +264,9 @@ class ProductController implements CrudOps
 
         $storeCtrl = new StoreController();
         $store = $storeCtrl->getId((int)$from_store_id);
-        if (($qtyToMove - $currentQty) < 0) {
+        $difference = $qtyToMove - $currentQty;
+        $response = null;
+        if ($difference < 0) {
             return [
                 "status"=>"error",
                 "message"=>"Quantity is insufficient.Cannot move more products that what is in the store"
@@ -276,29 +278,59 @@ class ProductController implements CrudOps
                 //if product exists just update the quantity
                 //else insert
                 $sql = "";
+
+
                 if ($productExists) {
                     $sql = "UPDATE products set quantity=quantity+'{$qtyToMove}' WHERE store_id='{$to_store_id}' AND 
                       id='{$productId}'";
                 }
                 if (!$productExists) {
-                    $sql = "INSERT INTO products(store_id, name, type, description, cost, quantity)
-                            VALUES ('{$to_store_id}', '{$productName}', '{$type}', '{$description}', '{$cost}','{$qtyToMove}')";
+                    $data = [
+                        "store_id"=>(int)$to_store_id,
+                        "name"=>$productName,
+                        "type"=>$type,
+                        "description"=>$description,
+                        "cost"=>$cost,
+                        "quantity"=>$qtyToMove
+                    ];
+
+                    $created= (new self)->create($data);
+                    if ($created['status'] == 'success'){
+                        $response = [
+                            "status" => "success",
+                            "message" => "{$qtyToMove} {$productName} Moved to store {$store['name']} "
+                        ];
+
+                        if ($difference == 0){
+                            //delete the product form the store
+                            self::clearProduct($productId, $from_store_id);
+                        }
+                    }
+
                 }
                 $db = new DB();
                 $stmt = $db->connect()->prepare($sql);
                 $query = $stmt->execute();
                 if ($query) {
                     self::updateStoreQty($productId, $from_store_id, $qtyToMove);
-                    return [
+                    $response = [
                         "status" => "success",
                         "message" => "{$qtyToMove} {$productName} Moved to store {$store['name']} "
                     ];
+
+                    if ($difference == 0){
+                        //delete the product form the store
+                        self::clearProduct($productId, $from_store_id);
+                    }
+
                 } else {
-                    return [
+                    $response = [
                         "status" => "error",
                         "message" => "SQL error Occurred: {$stmt->errorInfo()[2]}"
                     ];
                 }
+
+                return $response;
 
             } catch (\PDOException $e) {
 
@@ -313,6 +345,7 @@ class ProductController implements CrudOps
 
     public static function checkProductExistsInStore($productName, $storeId)
     {
+
         $db = new DB();
         try {
             $stmt = $db->connect()
@@ -345,6 +378,37 @@ class ProductController implements CrudOps
         } catch (\PDOException $e) {
             echo $e->getMessage();
             return false;
+        }
+    }
+
+    public static function clearProduct($productId, $storeId){
+        $db = new DB();
+        try {
+            $stmt = $db->connect()
+                ->prepare("DELETE FROM products WHERE  id=:id and store_id=:store_id");
+            $stmt->bindParam(":id", $productId);
+            $stmt->bindParam(":id", $storeId);
+
+            $query = $stmt->execute();
+            if ($query) {
+                return [
+                    "status" => "success",
+                    "message" => "Product Item deleted"
+                ];
+            } else {
+                return [
+                    "status" => "error",
+                    "message" => "Error Occurred Failed to delete Product Item"
+                ];
+            }
+
+
+        } catch (\PDOException $e) {
+            return [
+                "status" => "error",
+                "message" => "Exception Error {$e->getMessage()}"
+            ];
+
         }
     }
 }
