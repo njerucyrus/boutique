@@ -31,10 +31,7 @@ trait Auth
                     $response = [
                         "status" => "success",
                         "message" => "Login Successful",
-                        "data" => [
-                            "username" => $row["username"],
-                            "user_type" => $row["user_type"]
-                        ]
+                        "data" =>$row
                     ];
                 } else {
                     $response = [

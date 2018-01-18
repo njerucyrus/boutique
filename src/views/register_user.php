@@ -86,7 +86,7 @@ $users = $userCtrl->all();
     </form>
 
 </div>
-<div>
+
     <table>
         <tr>
             <th>Id</th>
@@ -107,6 +107,6 @@ $users = $userCtrl->all();
 <?php endforeach;?>
 
     </table>
-</div>
+
 </body>
 </html>

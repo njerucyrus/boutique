@@ -1,11 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: njerucyrus
- * Date: 1/18/18
- * Time: 12:38 AM
- */
 
+include 'cart.php';
+$cart = new Cart();
+$cartItems = $cart->contents();
 ?>
 
 <!DOCTYPE html>
@@ -39,6 +36,7 @@
         <h3>Shopping Cart</h3>
     <table id="cart_item_table" border="2px" width="80%">
         <thead>
+
             <tr>
                 <th>Product Name</th>
                 <th>Quantity</th>
@@ -48,42 +46,28 @@
             </tr>
         </thead>
         <tbody>
+        <?php foreach ($cartItems as $cartItem):?>
             <tr>
-                <td>Product 1</td>
-                <td> 2</td>
-                <td>$36.2</td>
-                <td>
-                    <a href="#">Edit Qty</a>
-                    <a href="#" class="delete">Remove </a>
-                </td>
-            </tr>
-            <tr>
-                <td>Product 1</td>
-                <td> 2</td>
-                <td>$36.2</td>
-                <td>
-                    <a href="#">Edit Qty </a>
-                    <a href="#" class="delete">Remove </a>
-                </td>
-            </tr>
-            <tr>
-                <td>Product 1</td>
-                <td> 2</td>
-                <td>$36.2</td>
-                <td>
-                    <a href="#">Edit Qty </a>
-                    <a href="#" class="delete">Remove </a>
-                </td>
+                <td><?php echo $cartItem['name']?></td>
+                <td><?php echo $cartItem['quantity'] ?></td>
+                <td>$<?php echo $cartItem['subtotal']?></td>
 
+                <td>
+
+                    <a href="cart_action.php?action=removeCartItem&id=<?php echo $cartItem['rowid']; ?>" onclick="return confirm('Are you sure?')">
+                        <button>Remove</button>
+                    </a>
+                </td>
             </tr>
+            <?php endforeach;?>
+
         <tr style="height: 25px;">
             <td colspan="2">
-                <button>Continue Shopping</button>
+                <a href="products.php">Continue Shopping</a>
                 &nbsp;&nbsp;
-
             </td>
-            <td>Total Cost <span>$</span> 104</td>
-            <td><button style="margin: 5px;">Checkout</button></td>
+            <td>Total Cost <span>$</span><?php echo $cart->total() > 0 ? $cart->total(): 0.0; ?></td>
+            <td><a href="checkout.php"><button style="margin: 5px;">Checkout</button></a></td>
         </tr>
         </tbody>
 

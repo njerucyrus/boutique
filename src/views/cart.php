@@ -1,5 +1,4 @@
-<?php
-session_start();
+<?php session_start();
 
 class Cart {
     protected $cart_contents = array();
@@ -47,7 +46,7 @@ class Cart {
         if(!is_array($item) OR count($item) === 0){
             return FALSE;
         }else{
-            if(!isset($item['id'], $item['name'], $item['cost'], $item['quantity'])){
+            if(!isset($item['product_id'], $item['name'], $item['cost'], $item['quantity'])){
                 return FALSE;
             }else{
                 /*
@@ -61,7 +60,7 @@ class Cart {
                 // prep the cost
                 $item['cost'] = (float) $item['cost'];
                 // create a unique identifier for the item being inserted into the cart
-                $rowid = md5($item['id']);
+                $rowid = md5($item['product_id']);
                 // get quantity if it's already there and add it on
                 $old_quantity = isset($this->cart_contents[$rowid]['quantity']) ? (int) $this->cart_contents[$rowid]['quantity'] : 0;
                 // re-create the entry with unique identifier and updated quantity

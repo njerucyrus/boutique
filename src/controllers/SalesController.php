@@ -59,7 +59,9 @@ class SalesController implements CrudOps
                 } else {
                     return [
                         "status" => "error",
-                        "message" => "Error Occurred Failed to Record Sale"
+                        "message" => "Error Occurred Failed to Record Sale {$stmt->errorInfo()[2]}",
+                        "stmt"=>$stmt,
+                        "data"=>$data
                     ];
                 }
 

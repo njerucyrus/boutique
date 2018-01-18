@@ -1,5 +1,5 @@
 <?php
-session_status();
+session_start();
 require_once __DIR__.'/../controllers/ProductController.php';
 
 use src\controllers\ProductController;
@@ -25,8 +25,9 @@ $products= $productController->all();
         <div><b>Store Name:</b> <?php echo $product['store_name']?><br></div>
         <div><b>Description</b><br><?php echo $product['description']?><br><br></div>
         <div><b>Price:</b> $ <?php echo $product['cost']?></div>
-            <div><a href="register_user.php"><button type="button">Buy</button></a>
-                <a href="register_user.php"><button type="button" >Lease</button></a></div>
+            <div>
+                <a href="cart_action.php?action=addToCart&id=<?php echo $product['id'] ?>"><button type="button">Add To Cart</button></a>
+            </div>
             <hr>
         </td>
 

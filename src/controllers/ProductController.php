@@ -153,7 +153,7 @@ class ProductController implements CrudOps
     public function getId($id)
     {
         if (is_int($id)) {
-            $sql = "SELECT  p.name, s.store_name as store_name,
+            $sql = "SELECT p.id, p.name, s.store_name as store_name,
                 p.description,p.cost, p.quantity
                 FROM products p  INNER  JOIN stores s ON s.id = p.store_id AND p.id='{$id}'";
             try {
@@ -182,6 +182,8 @@ class ProductController implements CrudOps
             ];
         }
     }
+
+
 
     public function delete($id)
     {

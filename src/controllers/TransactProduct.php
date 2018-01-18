@@ -33,14 +33,19 @@ trait TransactProduct
     }
 
     public function checkout($cartItems)
-    {
+    {   $res = false;
         if (sizeof($cartItems) > 0) {
             foreach ($cartItems as $item):
-                if ($this->create($item)["status"] == "success") {
+                $created = $this->create($item);
+                if ($created["status"] == "success") {
                     $this->updateQty($item['product_id'], $item['quantity']);
+                    $res =true;
+                }else{
+                $res = false;
                 }
             endforeach;
         }
+        return $res;
     }
 
 }

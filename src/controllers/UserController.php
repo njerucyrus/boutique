@@ -236,4 +236,28 @@ class UserController implements CrudOps
         }
     }
 
+    public static function getAssociatedCustomer($userId){
+        try{
+           $db = new DB();
+           $stmt = $db->connect()
+               ->prepare("SELECT * FROM customers WHERE customers.user_id='{$userId}' LIMIT 1");
+           if ($stmt->execute() and $stmt->rowCount() > 0){
+
+               return $stmt->fetch(\PDO::FETCH_ASSOC);
+           }
+           else {
+               return [
+                   "status"=>"error",
+                   "message"=>"Error {$stmt->errorInfo()[2]}"
+               ];
+           }
+        }catch (\PDOException $e){
+           echo  $e->getMessage();
+            return [
+                "status" => "error",
+                "message" => "Exception Error {$e->getMessage()}"
+            ];
+        }
+    }
+
 }
